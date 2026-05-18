@@ -1,6 +1,6 @@
 from locust import HttpUser, task, between
 
-VALID_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4NTM4OTk4LCJpYXQiOjE3Nzg1MzUzOTgsImp0aSI6IjZhNWNmMGUxYjY0YzQ0MzQ5ZGM3YzU0ODJjZTlkNGFiIiwidXNlcl9pZCI6IjMifQ.GFuTSCPBfJ6k3Pf-6qBFD-wUmbOuycNOqGpY9jiezhU"
+VALID_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc5MTEzNjc0LCJpYXQiOjE3NzkxMTAwNzQsImp0aSI6IjZjMzBkNjJlNWEwOTQzMmZiNzIwYThmNzUwYjU2NzdiIiwidXNlcl9pZCI6IjMifQ.gzI5tXy6X_lil1_GTSiihMDSSJHA4XV7H7qnSWIx_L0"
 
 class OrderTestUser(HttpUser):
     wait_time = between(1, 2)
