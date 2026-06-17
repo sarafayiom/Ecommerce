@@ -1,33 +1,59 @@
-from locust import HttpUser, task, between
+from queue import Empty, Queue
+from locust import HttpUser, between, task
+#هون استخدمت الطابور مشان اضمن انو كل مستخدم وهمي عم ياخد حساب حقيقي وفريد 
+user_queue = Queue()
+for i in range(1, 100):
+    user_queue.put((f"user_clean100_{i}", "testpass123"))
 
-VALID_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc5MTEzNjc0LCJpYXQiOjE3NzkxMTAwNzQsImp0aSI6IjZjMzBkNjJlNWEwOTQzMmZiNzIwYThmNzUwYjU2NzdiIiwidXNlcl9pZCI6IjMifQ.gzI5tXy6X_lil1_GTSiihMDSSJHA4XV7H7qnSWIx_L0"
-
-class OrderTestUser(HttpUser):
-    wait_time = between(1, 2)
+class EcommerceUser(HttpUser):
+    wait_time = between(1, 3)
 
     def on_start(self):
-        self.user_token = VALID_TOKEN
+        self.token = None
+        self.headers = {}
 
-    @task
-    def create_order(self):
-        headers = {
-            'Authorization': f'Bearer {self.user_token}',
-            'Content-Type': 'application/json'
-        }
-        
-        payload = {
-            "product_id": 1, 
-            "quantity": 1
-        }
+        try:
+            username, password = user_queue.get_nowait()
+        except Empty:
+            print("انتهت الحسابات المتاحة في الطابور!")
+            return
 
         with self.client.post(
-            "/api/orders/", 
-            json=payload, 
-            headers=headers, 
-            name="POST /api/orders/ (Order Creation)",
-            catch_response=True
+            "/api/login/",
+            json={"username": username, "password": password},
+            catch_response=True,
         ) as response:
-            if response.status_code in [201, 202]:
+            if response.status_code == 200:
+                self.token = response.json().get("access")
+                self.headers = {"Authorization": f"Bearer {self.token}"}
                 response.success()
             else:
-                response.failure(f"Status: {response.status_code}, Error: {response.text}")
+                response.failure(f" فشل تسجيل دخول {username}: كود {response.status_code}")
+
+    @task(3)
+    def products(self):
+        if self.token:
+            self.client.get("/api/products/", headers=self.headers)
+
+    @task(2)
+    def top_products(self):
+        if self.token:
+            self.client.get("/api/top-products/", headers=self.headers)
+
+    @task(2)
+    def checkout(self):
+        if self.token:
+            self.client.post(
+                "/api/checkout/",
+                json={"product_id": 1, "quantity": 1},
+                headers=self.headers,
+            )
+
+    @task(1)
+    def create_order(self):
+        if self.token:
+            self.client.post(
+                "/api/orders/",
+                json={"product_id": 1, "quantity": 1},
+                headers=self.headers,
+            )

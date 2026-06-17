@@ -7,7 +7,7 @@ class Product(models.Model):
     name = models.CharField(max_length=225)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=10 , decimal_places=2)
-    
+    sold_count = models.IntegerField(default=0)   # ← جديد
     
 class Order(models.Model):
     STATUS_CHOICES = [

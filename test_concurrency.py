@@ -2,7 +2,7 @@ import threading
 import requests
 
 URL = "http://127.0.0.1:8000/api/orders/"
-TOKEN ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc3NzQ5OTUzLCJpYXQiOjE3Nzc3NDYzNTMsImp0aSI6IjI2YjUyODQwNWEzYjQ4Nzg5YzdjOGNkMmI0ZjJiNGViIiwidXNlcl9pZCI6MX0.aMQpvjDdPHC5YfOQS213iMOPimj12S_eKqXDH545Q0w"
+TOKEN ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzgxNDczODg2LCJpYXQiOjE3ODE0NzAyODYsImp0aSI6IjkxNjVhYWRlMzQzODRlY2ZiZTU0ODIxNGNiNGMzNDg1IiwidXNlcl9pZCI6IjEifQ.7rAZLZaH7d_465sR318QsuAXA0KY_Vwu9wbPnH12hNE"
 print("URL is:", URL)
 def order():
     try:
@@ -24,7 +24,7 @@ def order():
 
 threads = []
 
-for _ in range(3):
+for _ in range(20):
     t = threading.Thread(target=order)
     t.start()
     threads.append(t)

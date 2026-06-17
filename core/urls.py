@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from .views import register, BulkDataChargerAPIView
 from django.urls import path
-from .views import ProductListCreateAPIView, ProductDetailAPIView , OrderDetailAPIView , OrderListCreateAPIView , PayOrderAPIView , CancelOrderAPIView ,CompleteOrderAPIView
+from .views import ProductListCreateAPIView, ProductDetailAPIView , OrderDetailAPIView , OrderListCreateAPIView , PayOrderAPIView , CancelOrderAPIView ,CompleteOrderAPIView , TopProductsAPIView , CheckoutAPIView
 
 urlpatterns = [
     path('products/', ProductListCreateAPIView.as_view()),
@@ -13,5 +13,8 @@ urlpatterns = [
     path('orders/<int:id>/complete/', CompleteOrderAPIView.as_view()),
     path('orders/<int:id>/cancel/', CancelOrderAPIView.as_view()),
     path('api/charge-db/', BulkDataChargerAPIView.as_view(), name='charge-db'),
+    path("top-products/", TopProductsAPIView.as_view()),
+    path("checkout/", CheckoutAPIView.as_view()),
+
 ]
     
